@@ -1,5 +1,6 @@
 package br.com.erudio.restwithspringbooterudio.controllers;
 
+import br.com.erudio.restwithspringbooterudio.exceptions.UnsupportedMathOperation;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +19,13 @@ public class MathController {
     }
 
     private Double convertToDouble(String strNum) {
-        if (strNum == null || strNum.isEmpty()) throw new IllegalArgumentException("Is not a number");
+        if (strNum == null || strNum.isEmpty())
+            throw new UnsupportedMathOperation("Please set a numeric value");
         String number = strNum.replace(",", ".");
-        return Double.parseDouble(number);
+        try {
+            return Double.parseDouble(number);
+        } catch (NumberFormatException e) {
+            throw new UnsupportedMathOperation("Please set a numeric value");
+        }
     }
 }
