@@ -1,7 +1,7 @@
 package br.com.erudio.restwithspringbooterudio.exceptions.handler;
 
 import br.com.erudio.restwithspringbooterudio.exceptions.ExceptionResponse;
-import br.com.erudio.restwithspringbooterudio.exceptions.UnsupportedMathOperation;
+import br.com.erudio.restwithspringbooterudio.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,8 +27,8 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler 
                 .body(response);
     }
 
-    @ExceptionHandler(UnsupportedMathOperation.class)
-    public final ResponseEntity<ExceptionResponse> handleBadRequestExceptions(Exception ex, WebRequest request) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleResourceNotFoundException(Exception ex, WebRequest request) {
         var response = ExceptionResponse.builder()
                 .timestamp(Instant.now())
                 .message(ex.getMessage())
@@ -36,7 +36,7 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler 
                 .build();
 
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.NOT_FOUND)
                 .body(response);
     }
 }

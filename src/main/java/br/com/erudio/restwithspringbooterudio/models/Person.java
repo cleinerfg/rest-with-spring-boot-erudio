@@ -1,21 +1,41 @@
 package br.com.erudio.restwithspringbooterudio.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Objects;
 
-@Getter
-@Builder
-@AllArgsConstructor
+@Entity
+@Table(name = "person")
+@Getter @Setter
+@NoArgsConstructor
 public class Person {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Long id;
+
+    @Column(nullable = false, length = 80)
     private String firstName;
+
+    @Column(nullable = false, length = 80)
     private String lastName;
+
+
+    @Column(nullable = false, length = 100)
     private String address;
+
+    @Column(nullable = false, length = 6)
     private String gender;
+
+    @Builder
+    public Person(String firstName, String lastName, String address, String gender) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.gender = gender;
+    }
 
     @Override
     public boolean equals(Object o) {

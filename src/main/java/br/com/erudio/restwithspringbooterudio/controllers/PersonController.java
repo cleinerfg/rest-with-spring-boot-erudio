@@ -1,7 +1,7 @@
 package br.com.erudio.restwithspringbooterudio.controllers;
 
 import br.com.erudio.restwithspringbooterudio.models.Person;
-import br.com.erudio.restwithspringbooterudio.service.PersonService;
+import br.com.erudio.restwithspringbooterudio.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
