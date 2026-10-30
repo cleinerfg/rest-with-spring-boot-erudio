@@ -27,12 +27,27 @@ public class PersonService {
     }
 
     public List<Person> findAll() {
+        logger.info("Finding all persons!");
         var persons = new ArrayList<Person>();
 
         for (int i = 0; i < 5; i++) {
             persons.add(mockPerson());
         }
         return persons;
+    }
+
+    public Person create(Person person) {
+        logger.info("Creating person!");
+        return person;
+    }
+
+    public void delete(Long id) {
+        logger.info("Deleting person!");
+    }
+
+    public Person update(Person person) {
+        logger.info("Updating person!");
+        return person;
     }
 
     private Person mockPerson() {
