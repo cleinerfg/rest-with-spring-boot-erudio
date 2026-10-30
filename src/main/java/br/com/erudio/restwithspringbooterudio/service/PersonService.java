@@ -3,6 +3,8 @@ package br.com.erudio.restwithspringbooterudio.service;
 import br.com.erudio.restwithspringbooterudio.models.Person;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
@@ -20,6 +22,25 @@ public class PersonService {
                 .firstName("Jeremy")
                 .lastName("Guilbert")
                 .address("Mystic Falls - EUA")
+                .gender("Male")
+                .build();
+    }
+
+    public List<Person> findAll() {
+        var persons = new ArrayList<Person>();
+
+        for (int i = 0; i < 5; i++) {
+            persons.add(mockPerson());
+        }
+        return persons;
+    }
+
+    private Person mockPerson() {
+        return Person.builder()
+                .id(counter.incrementAndGet())
+                .firstName("FirstName " + counter.incrementAndGet())
+                .lastName("LasName")
+                .address("Some address")
                 .gender("Male")
                 .build();
     }
