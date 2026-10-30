@@ -4,8 +4,11 @@ import br.com.erudio.restwithspringbooterudio.models.Person;
 import br.com.erudio.restwithspringbooterudio.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -15,41 +18,46 @@ public class PersonController {
     @Autowired
     private PersonService service;
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}",
-            method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person getById(@PathVariable("id") Long id) {
-        return service.findById(id);
+    public ResponseEntity<Person> getById(@PathVariable("id") Long id) {
+        Person person = service.findById(id);
+        return ResponseEntity.ok(person);
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Person> getAll() {
-        return service.findAll();
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Person>> getAll() {
+        List<Person> persons = service.findAll();
+        return ResponseEntity.ok(persons);
     }
 
-    @RequestMapping(
-            method = RequestMethod.POST,
+    @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person create(@RequestBody Person person) {
-        return service.create(person);
+    public ResponseEntity<Person> create(@RequestBody Person person) {
+        Person createdPerson = service.create(person);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(createdPerson.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(createdPerson);
     }
 
-    @RequestMapping(
-            method = RequestMethod.PUT,
+    @PutMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person update(@RequestBody Person person) {
-        return service.update(person);
+    public ResponseEntity<Person> update(@RequestBody Person person) {
+        Person updatedPerson = service.update(person);
+        return ResponseEntity.ok(updatedPerson);
     }
 
-    @RequestMapping(
-            value = "/{id}",
-            method = RequestMethod.DELETE)
-    public void delete(@PathVariable("id") Long id) {
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
