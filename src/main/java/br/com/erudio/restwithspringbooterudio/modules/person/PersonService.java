@@ -1,8 +1,6 @@
-package br.com.erudio.restwithspringbooterudio.services;
+package br.com.erudio.restwithspringbooterudio.modules.person;
 
 import br.com.erudio.restwithspringbooterudio.exceptions.ResourceNotFoundException;
-import br.com.erudio.restwithspringbooterudio.models.Person;
-import br.com.erudio.restwithspringbooterudio.repositories.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

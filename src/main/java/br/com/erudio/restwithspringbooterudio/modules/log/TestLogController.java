@@ -1,4 +1,4 @@
-package br.com.erudio.restwithspringbooterudio.controllers;
+package br.com.erudio.restwithspringbooterudio.modules.log;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
