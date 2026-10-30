@@ -3,16 +3,17 @@ package br.com.erudio.restwithspringbooterudio.services;
 import br.com.erudio.restwithspringbooterudio.exceptions.ResourceNotFoundException;
 import br.com.erudio.restwithspringbooterudio.models.Person;
 import br.com.erudio.restwithspringbooterudio.repositories.PersonRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @Service
 public class PersonService {
 
-    private final Logger logger = Logger.getLogger(PersonService.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(PersonService.class.getName());
 
     @Autowired
     private PersonRepository repository;

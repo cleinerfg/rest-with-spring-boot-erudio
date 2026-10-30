@@ -16,3 +16,7 @@ spring:
     #        dialect: org.hibernate.dialect.MySQLDialect # dialect was deprecated
     show-sql: false
     open-in-view: false
+logging:
+  level:
+    #    root: WARN
+    br.com.erudio: DEBUG
