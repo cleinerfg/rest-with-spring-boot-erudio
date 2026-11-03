@@ -18,23 +18,39 @@ public class PersonController {
     @Autowired
     private PersonService service;
 
-    @GetMapping(
-            value = "/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PersonResponse> getById(@PathVariable("id") Long id) {
-        PersonResponse response = service.findById(id);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE
+    })
     public ResponseEntity<List<PersonResponse>> getAll() {
         List<PersonResponse> responses = service.findAll();
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping(
+            value = "/{id}",
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE
+            })
+    public ResponseEntity<PersonResponse> getById(@PathVariable("id") Long id) {
+        PersonResponse response = service.findById(id);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping(
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            consumes = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE
+            },
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE
+            })
     public ResponseEntity<PersonResponse> create(@RequestBody PersonRequest request) {
         PersonResponse createdPerson = service.create(request);
 
@@ -49,8 +65,16 @@ public class PersonController {
 
     @PutMapping(
             value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            consumes = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE
+            },
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE
+            })
     public ResponseEntity<PersonResponse> update(
             @PathVariable("id") Long id,
             @RequestBody PersonRequest request) {
