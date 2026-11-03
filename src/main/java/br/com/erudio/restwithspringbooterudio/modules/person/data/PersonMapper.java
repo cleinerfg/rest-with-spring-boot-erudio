@@ -6,6 +6,9 @@ import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonResp
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PersonMapper {
 
@@ -14,6 +17,7 @@ public class PersonMapper {
                 .id(person.getId())
                 .firstName(person.getFirstName())
                 .lastName(person.getLastName())
+                .birthDate(LocalDate.now(ZoneId.of("UTC")))
                 .address(person.getAddress())
                 .gender(person.getGender())
                 .build();
