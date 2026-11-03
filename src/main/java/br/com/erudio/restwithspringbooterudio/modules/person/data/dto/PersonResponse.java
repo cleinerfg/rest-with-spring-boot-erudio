@@ -6,12 +6,14 @@ package br.com.erudio.restwithspringbooterudio.modules.person.data.dto;
 
 import br.com.erudio.restwithspringbooterudio.serializer.GenderSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Builder;
 
 import java.time.LocalDate;
 
 //@JsonPropertyOrder({"id", "address", "first_name", "last_name", "gender"})
+//@JsonFilter("PersonFilter") // don't work in records
 @Builder
 public record PersonResponse(
         Long id,
@@ -21,6 +23,11 @@ public record PersonResponse(
 
 //        @JsonProperty("last_name")
         String lastName,
+
+        String sensitiveData,
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        String phoneNumber,
 
         @JsonFormat(pattern = "dd/MM/yyyy")
         LocalDate birthDate,

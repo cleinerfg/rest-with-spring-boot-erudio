@@ -17,6 +17,8 @@ public class PersonMapper {
                 .id(person.getId())
                 .firstName(person.getFirstName())
                 .lastName(person.getLastName())
+                .sensitiveData("sensitiveData")
+                .phoneNumber("0000000")
                 .birthDate(LocalDate.now(ZoneId.of("UTC")))
                 .address(person.getAddress())
                 .gender(person.getGender())
