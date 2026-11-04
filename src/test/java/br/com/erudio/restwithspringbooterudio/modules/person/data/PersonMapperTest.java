@@ -15,17 +15,17 @@ class PersonMapperTest {
     void shouldMapPersonToPersonResponseSuccessfully() {
         // Arrange
         Person mock = mockPersonEntity();
-        
+
         //Act
         PersonResponse response = PersonMapper.toResponse(mock);
 
         // Assert
         assertThat(response).isNotNull();
-        assertThat(response.id()).isEqualTo(mock.getId());
-        assertThat(response.firstName()).isEqualTo(mock.getFirstName());
-        assertThat(response.lastName()).isEqualTo(mock.getLastName());
-        assertThat(response.address()).isEqualTo(mock.getAddress());
-        assertThat(response.gender()).isEqualTo(mock.getGender());
+        assertThat(response.getId()).isEqualTo(mock.getId());
+        assertThat(response.getFirstName()).isEqualTo(mock.getFirstName());
+        assertThat(response.getLastName()).isEqualTo(mock.getLastName());
+        assertThat(response.getAddress()).isEqualTo(mock.getAddress());
+        assertThat(response.getGender()).isEqualTo(mock.getGender());
     }
 
     @Test
