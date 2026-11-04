@@ -2,6 +2,7 @@ package br.com.erudio.restwithspringbooterudio.modules.person;
 
 import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonRequest;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonResponse;
+import br.com.erudio.restwithspringbooterudio.modules.person.docs.PersonControllerDocs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/person/v1")
-public class PersonController {
+public class PersonController implements PersonControllerDocs {
 
     @Autowired
     private PersonService service;
@@ -23,6 +24,7 @@ public class PersonController {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_YAML_VALUE
     })
+    @Override
     public ResponseEntity<List<PersonResponse>> getAll() {
         List<PersonResponse> responses = service.findAll();
         return ResponseEntity.ok(responses);
@@ -35,6 +37,7 @@ public class PersonController {
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE
             })
+    @Override
     public ResponseEntity<PersonResponse> getById(@PathVariable("id") Long id) {
         PersonResponse response = service.findById(id);
         return ResponseEntity.ok(response);
@@ -51,6 +54,7 @@ public class PersonController {
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE
             })
+    @Override
     public ResponseEntity<PersonResponse> create(@RequestBody PersonRequest request) {
         PersonResponse createdPerson = service.create(request);
 
@@ -75,6 +79,7 @@ public class PersonController {
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE
             })
+    @Override
     public ResponseEntity<PersonResponse> update(
             @PathVariable("id") Long id,
             @RequestBody PersonRequest request) {
@@ -83,6 +88,7 @@ public class PersonController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @Override
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
