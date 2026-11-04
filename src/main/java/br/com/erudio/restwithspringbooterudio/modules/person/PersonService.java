@@ -1,5 +1,6 @@
 package br.com.erudio.restwithspringbooterudio.modules.person;
 
+import br.com.erudio.restwithspringbooterudio.exceptions.RequiredObjectIsNullException;
 import br.com.erudio.restwithspringbooterudio.exceptions.ResourceNotFoundException;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.PersonMapper;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonRequest;
@@ -44,6 +45,9 @@ public class PersonService {
     }
 
     public PersonResponse create(PersonRequest request) {
+
+        if (request == null) throw new RequiredObjectIsNullException();
+
         logger.info("Creating person!");
         Person entity = PersonMapper.toEntity(request);
         Person savedEntity = repository.save(entity);
@@ -61,6 +65,8 @@ public class PersonService {
     }
 
     public PersonResponse update(Long id, PersonRequest request) {
+        if (request == null) throw new RequiredObjectIsNullException();
+
         logger.info("Updating person!");
         Person entity = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No records found with id: " + id)
