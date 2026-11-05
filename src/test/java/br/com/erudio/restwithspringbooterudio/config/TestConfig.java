@@ -1,5 +1,10 @@
 package br.com.erudio.restwithspringbooterudio.config;
 
-public interface TestConfig {
-    int SERVER_PORT = 8888;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class TestConfig {
+
+    public static final int SERVER_PORT = 8888;
 }
