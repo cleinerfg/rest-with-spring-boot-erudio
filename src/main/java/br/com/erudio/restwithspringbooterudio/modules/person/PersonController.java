@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+//@CrossOrigin
 @RestController
 @RequestMapping("/api/person/v1")
 public class PersonController implements PersonControllerDocs {
@@ -30,6 +31,7 @@ public class PersonController implements PersonControllerDocs {
         return ResponseEntity.ok(responses);
     }
 
+    //    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8081"})
     @GetMapping(
             value = "/{id}",
             produces = {
