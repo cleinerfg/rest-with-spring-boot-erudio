@@ -13,6 +13,8 @@ class PersonMapperTest {
 
     private MockPerson input;
 
+    private final PersonMapper mapper = new PersonMapper();
+
     @BeforeEach
     void setUp() {
         input = new MockPerson();
@@ -25,7 +27,7 @@ class PersonMapperTest {
         Person mock = input.mockEntity(1);
 
         // Act
-        PersonResponse response = PersonMapper.toResponse(mock);
+        PersonResponse response = mapper.toResponse(mock);
 
         // Assert
         assertThat(response).isNotNull();
@@ -43,7 +45,7 @@ class PersonMapperTest {
         PersonRequest request = input.mockRequest(1);
 
         // Act
-        Person person = PersonMapper.toEntity(request);
+        Person person = mapper.toEntity(request);
 
         // Assert
         assertThat(person).isNotNull();

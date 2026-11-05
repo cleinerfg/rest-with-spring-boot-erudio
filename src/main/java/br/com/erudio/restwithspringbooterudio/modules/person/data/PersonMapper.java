@@ -3,13 +3,12 @@ package br.com.erudio.restwithspringbooterudio.modules.person.data;
 import br.com.erudio.restwithspringbooterudio.modules.person.Person;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonRequest;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonResponse;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Component
 public class PersonMapper {
 
-    public static PersonResponse toResponse(Person person) {
+    public PersonResponse toResponse(Person person) {
         return PersonResponse.builder()
                 .id(person.getId())
                 .firstName(person.getFirstName())
@@ -19,7 +18,7 @@ public class PersonMapper {
                 .build();
     }
 
-    public static Person toEntity(PersonRequest request) {
+    public Person toEntity(PersonRequest request) {
         return Person.builder()
                 .firstName(request.firstName())
                 .lastName(request.lastName())

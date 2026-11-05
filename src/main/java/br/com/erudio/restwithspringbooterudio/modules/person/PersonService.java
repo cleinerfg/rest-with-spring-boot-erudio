@@ -23,12 +23,15 @@ public class PersonService {
     @Autowired
     private PersonRepository repository;
 
+    @Autowired
+    PersonMapper mapper;
+
     public PersonResponse findById(Long id) {
         logger.info("Finding person by id!");
         Person entity = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No records found with id: " + id)
         );
-        var dto = PersonMapper.toResponse(entity);
+        var dto = mapper.toResponse(entity);
         addHateosLinks(dto);
         return dto;
     }
@@ -37,7 +40,7 @@ public class PersonService {
         logger.info("Finding all persons!");
         var entities = repository.findAll();
         var dtos = entities.stream()
-                .map(PersonMapper::toResponse)
+                .map(mapper::toResponse)
                 .toList();
 
         dtos.forEach(PersonService::addHateosLinks);
@@ -49,9 +52,9 @@ public class PersonService {
         if (request == null) throw new RequiredObjectIsNullException();
 
         logger.info("Creating person!");
-        Person entity = PersonMapper.toEntity(request);
+        Person entity = mapper.toEntity(request);
         Person savedEntity = repository.save(entity);
-        var dto = PersonMapper.toResponse(savedEntity);
+        var dto = mapper.toResponse(savedEntity);
         addHateosLinks(dto);
         return dto;
     }
@@ -78,7 +81,7 @@ public class PersonService {
         entity.setGender(request.gender());
 
         Person updatedEntity = repository.save(entity);
-        var dto = PersonMapper.toResponse(updatedEntity);
+        var dto = mapper.toResponse(updatedEntity);
         addHateosLinks(dto);
         return dto;
     }
