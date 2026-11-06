@@ -61,6 +61,7 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertEquals(createdPerson.getLastName(), request.lastName());
         assertEquals(createdPerson.getAddress(), request.address());
         assertEquals(createdPerson.getGender(), request.gender());
+        assertEquals(createdPerson.getEnabled(), request.enabled());
     }
 
     @Test
@@ -122,6 +123,7 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertEquals(updatedPerson.getLastName(), request.lastName());
         assertEquals(updatedPerson.getAddress(), request.address());
         assertEquals(updatedPerson.getGender(), request.gender());
+        assertEquals(updatedPerson.getEnabled(), request.enabled());
     }
 
     @Test

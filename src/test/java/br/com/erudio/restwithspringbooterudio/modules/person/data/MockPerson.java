@@ -23,6 +23,7 @@ public class MockPerson {
                 .lastName("Gilbert" + number)
                 .address("Mystic Falls Boarding House" + number)
                 .gender("Female")
+                .enabled(true)
                 .build();
 
         try {
@@ -41,6 +42,7 @@ public class MockPerson {
                 .lastName("Gilbert" + number)
                 .address("Mystic Falls Boarding House" + number)
                 .gender("Female")
+                .enabled(true)
                 .build();
     }
 
@@ -51,6 +53,7 @@ public class MockPerson {
                 .lastName("Gilbert" + number)
                 .address("Mystic Falls Boarding House" + number)
                 .gender("Female")
+                .enabled(true)
                 .build();
     }
 

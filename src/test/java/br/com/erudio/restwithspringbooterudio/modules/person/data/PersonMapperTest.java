@@ -36,6 +36,7 @@ class PersonMapperTest {
         assertThat(response.getLastName()).isEqualTo(mock.getLastName());
         assertThat(response.getAddress()).isEqualTo(mock.getAddress());
         assertThat(response.getGender()).isEqualTo(mock.getGender());
+        assertThat(response.getEnabled()).isEqualTo(mock.getEnabled());
     }
 
     @Test
@@ -54,5 +55,6 @@ class PersonMapperTest {
         assertThat(person.getLastName()).isEqualTo(request.lastName());
         assertThat(person.getAddress()).isEqualTo(request.address());
         assertThat(person.getGender()).isEqualTo(request.gender());
+        assertThat(person.getEnabled()).isEqualTo(request.enabled());
     }
 }
