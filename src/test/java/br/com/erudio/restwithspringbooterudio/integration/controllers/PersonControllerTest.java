@@ -21,7 +21,8 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.ObjectMapperConfig.objectMapperConfig;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -43,7 +44,7 @@ class PersonControllerTest extends AbstractIntegrationTest {
 
     @Test
     @Order(1)
-    void create() {
+    void shouldCreatePersonSuccessfully() {
         PersonRequest request = input.mockRequest();
         RequestSpecification reqSpec = buildReqSpecification(request);
 
@@ -56,21 +57,20 @@ class PersonControllerTest extends AbstractIntegrationTest {
                 .body()
                 .as(PersonResponse.class);
 
-        assertNotNull(createdPerson.getId());
-        assertEquals(createdPerson.getFirstName(), request.firstName());
-        assertEquals(createdPerson.getLastName(), request.lastName());
-        assertEquals(createdPerson.getAddress(), request.address());
-        assertEquals(createdPerson.getGender(), request.gender());
-        assertEquals(createdPerson.getEnabled(), request.enabled());
+        assertThat(createdPerson).isNotNull();
+        assertThat(createdPerson.getId()).isNotNull();
+        assertThat(createdPerson.getFirstName()).isEqualTo(request.firstName());
+        assertThat(createdPerson.getLastName()).isEqualTo(request.lastName());
+        assertThat(createdPerson.getAddress()).isEqualTo(request.address());
+        assertThat(createdPerson.getGender()).isEqualTo(request.gender());
+        assertThat(createdPerson.getEnabled()).isEqualTo(request.enabled());
     }
 
     @Test
     @Order(2)
-    void createTestWithWrongOrigin() {
+    void shouldDenyCreationWhenOriginIsInvalid() {
         PersonRequest request = input.mockRequest();
-        RequestSpecification reqSpec = buildReqSpecification(
-                request, TestConfig.ORIGIN_UNALLOWED
-        );
+        RequestSpecification reqSpec = buildReqSpecification(request, TestConfig.ORIGIN_UNALLOWED);
 
         String content = given(reqSpec)
                 .when()
@@ -81,12 +81,12 @@ class PersonControllerTest extends AbstractIntegrationTest {
                 .body()
                 .asString();
 
-        assertEquals("Invalid CORS request", content);
+        assertThat(content).isEqualTo("Invalid CORS request");
     }
 
     @Test
     @Order(3)
-    void getById() {
+    void shouldFindPersonById() {
         RequestSpecification reqSpec = buildReqSpecification();
 
         PersonResponse personResponse = given(reqSpec)
@@ -99,18 +99,19 @@ class PersonControllerTest extends AbstractIntegrationTest {
                 .body()
                 .as(PersonResponse.class);
 
-        assertEquals(1L, personResponse.getId());
+        assertThat(personResponse).isNotNull();
+        assertThat(personResponse.getId()).isEqualTo(1L);
     }
 
     @Test
     @Order(4)
-    void update() {
+    void shouldUpdatePersonSuccessfully() {
         PersonRequest request = input.mockRequest(25);
         RequestSpecification reqSpec = buildReqSpecification(request);
 
         PersonResponse updatedPerson = given(reqSpec)
-                .when()
                 .pathParam("id", 1)
+                .when()
                 .put("/{id}")
                 .then()
                 .statusCode(200)
@@ -118,17 +119,18 @@ class PersonControllerTest extends AbstractIntegrationTest {
                 .body()
                 .as(PersonResponse.class);
 
-        assertNotNull(updatedPerson.getId());
-        assertEquals(updatedPerson.getFirstName(), request.firstName());
-        assertEquals(updatedPerson.getLastName(), request.lastName());
-        assertEquals(updatedPerson.getAddress(), request.address());
-        assertEquals(updatedPerson.getGender(), request.gender());
-        assertEquals(updatedPerson.getEnabled(), request.enabled());
+        assertThat(updatedPerson).isNotNull();
+        assertThat(updatedPerson.getId()).isNotNull();
+        assertThat(updatedPerson.getFirstName()).isEqualTo(request.firstName());
+        assertThat(updatedPerson.getLastName()).isEqualTo(request.lastName());
+        assertThat(updatedPerson.getAddress()).isEqualTo(request.address());
+        assertThat(updatedPerson.getGender()).isEqualTo(request.gender());
+        assertThat(updatedPerson.getEnabled()).isEqualTo(request.enabled());
     }
 
     @Test
     @Order(5)
-    void delete() {
+    void shouldDeletePersonSuccessfully() {
         RequestSpecification reqSpec = buildReqSpecification();
 
         given(reqSpec)
@@ -141,7 +143,7 @@ class PersonControllerTest extends AbstractIntegrationTest {
 
     @Test
     @Order(6)
-    void getAll() {
+    void shouldFindAllPersons() {
         RequestSpecification reqSpec = buildReqSpecification();
 
         PersonResponse[] responseArray = given(reqSpec)
@@ -150,6 +152,7 @@ class PersonControllerTest extends AbstractIntegrationTest {
                 .then()
                 .statusCode(200)
                 .extract()
+                .body()
                 .as(PersonResponse[].class);
 
         List<PersonResponse> list = List.of(responseArray);
