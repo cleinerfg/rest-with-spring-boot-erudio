@@ -86,6 +86,21 @@ public class PersonService {
         return dto;
     }
 
+    public PersonResponse disable(Long id) {
+        logger.info("Disabling person!");
+
+        Person entity = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("No records found with id: " + id)
+        );
+
+        entity.setEnabled(false);
+        repository.save(entity);
+
+        var dto = mapper.toResponse(entity);
+        addHateosLinks(dto);
+        return dto;
+    }
+
     private static void addHateosLinks(PersonResponse dto) {
         Long id = dto.getId();
 
@@ -107,6 +122,11 @@ public class PersonService {
         dto.add(linkTo(methodOn(PersonController.class).update(id, null))
                 .withRel("update")
                 .withType("PUT")
+        );
+
+        dto.add(linkTo(methodOn(PersonController.class).disable(id))
+                .withRel("disable")
+                .withType("PATCH")
         );
 
         dto.add(linkTo(methodOn(PersonController.class).delete(id))
