@@ -29,12 +29,16 @@ public class Person {
     @Column(nullable = false, length = 6)
     private String gender;
 
+    @Column(nullable = false)
+    private Boolean enabled;
+
     @Builder
-    public Person(String firstName, String lastName, String address, String gender) {
+    public Person(String firstName, String lastName, String address, String gender, Boolean enabled) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.gender = gender;
+        this.enabled = enabled;
     }
 
     @Override
