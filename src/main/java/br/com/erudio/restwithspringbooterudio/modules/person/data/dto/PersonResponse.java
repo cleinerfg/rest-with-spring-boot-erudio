@@ -15,6 +15,7 @@ public class PersonResponse extends RepresentationModel<PersonResponse> {
     private String lastName;
     private String address;
     private String gender;
+    private Boolean enabled;
 
     @Override
     public boolean equals(Object o) {

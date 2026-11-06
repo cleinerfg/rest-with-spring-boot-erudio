@@ -15,6 +15,7 @@ public class PersonMapper {
                 .lastName(person.getLastName())
                 .address(person.getAddress())
                 .gender(person.getGender())
+                .enabled(person.getEnabled())
                 .build();
     }
 
@@ -24,6 +25,7 @@ public class PersonMapper {
                 .lastName(request.lastName())
                 .address(request.address())
                 .gender(request.gender())
+                .enabled(request.enabled())
                 .build();
     }
 }

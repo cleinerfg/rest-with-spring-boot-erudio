@@ -7,6 +7,7 @@ public record PersonRequest(
         String firstName,
         String lastName,
         String address,
-        String gender
+        String gender,
+        Boolean enabled
 ) {
 }
