@@ -8,9 +8,9 @@ import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonResp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -36,15 +36,16 @@ public class PersonService {
         return dto;
     }
 
-    public List<PersonResponse> findAll() {
+    public Page<PersonResponse> findAll(Pageable pageable) {
         logger.info("Finding all persons!");
-        var entities = repository.findAll();
-        var dtos = entities.stream()
-                .map(mapper::toResponse)
-                .toList();
 
-        dtos.forEach(PersonService::addHateosLinks);
-        return dtos;
+        var personPage = repository.findAll(pageable);
+
+        return personPage.map(entity -> {
+            var dto = mapper.toResponse(entity);
+            addHateosLinks(dto);
+            return dto;
+        });
     }
 
     public PersonResponse create(PersonRequest request) {
@@ -109,7 +110,7 @@ public class PersonService {
                 .withType("GET")
         );
 
-        dto.add(linkTo(methodOn(PersonController.class).getAll())
+        dto.add(linkTo(methodOn(PersonController.class).getAll(null, null, null))
                 .withRel("getAll")
                 .withType("GET")
         );
