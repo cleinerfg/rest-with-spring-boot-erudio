@@ -105,6 +105,26 @@ class PersonControllerTest extends AbstractIntegrationTest {
 
     @Test
     @Order(4)
+    void shouldDisablePersonSuccessfully() {
+        RequestSpecification reqSpec = buildReqSpecification();
+
+        PersonResponse personResponse = given(reqSpec)
+                .pathParam("id", 1)
+                .when()
+                .patch("/{id}")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .as(PersonResponse.class);
+
+        assertThat(personResponse).isNotNull();
+        assertThat(personResponse.getId()).isEqualTo(1L);
+        assertThat(personResponse.getEnabled()).isFalse();
+    }
+
+    @Test
+    @Order(5)
     void shouldUpdatePersonSuccessfully() {
         PersonRequest request = input.mockRequest(25);
         RequestSpecification reqSpec = buildReqSpecification(request);
@@ -125,11 +145,11 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertThat(updatedPerson.getLastName()).isEqualTo(request.lastName());
         assertThat(updatedPerson.getAddress()).isEqualTo(request.address());
         assertThat(updatedPerson.getGender()).isEqualTo(request.gender());
-        assertThat(updatedPerson.getEnabled()).isEqualTo(request.enabled());
+        assertThat(updatedPerson.getEnabled()).isFalse(); // because was disabled in before test
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     void shouldDeletePersonSuccessfully() {
         RequestSpecification reqSpec = buildReqSpecification();
 
@@ -142,7 +162,7 @@ class PersonControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void shouldFindAllPersons() {
         RequestSpecification reqSpec = buildReqSpecification();
 
