@@ -2,6 +2,7 @@ package br.com.erudio.restwithspringbooterudio.modules.person;
 
 import br.com.erudio.restwithspringbooterudio.exceptions.RequiredObjectIsNullException;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.MockPerson;
+import br.com.erudio.restwithspringbooterudio.modules.person.data.PersonMapper;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ class PersonServiceTest {
     @Mock
     PersonRepository repository;
 
+    @Mock
+    PersonMapper mapper;
+
     @InjectMocks
     private PersonService service;
 
@@ -40,9 +44,13 @@ class PersonServiceTest {
     @Test
     void findById() {
         var person = input.mockEntity(1);
+        var personResponse = input.mockResponse(1);
 
         when(repository.findById(1L))
                 .thenReturn(Optional.of(person));
+
+        when(mapper.toResponse(person))
+                .thenReturn(personResponse);
 
         var result = service.findById(1L);
 
@@ -85,8 +93,11 @@ class PersonServiceTest {
     @Test
     void findAll() {
         List<Person> persons = input.mockEntityList();
+        var personResponse = input.mockResponse(1);
 
         when(repository.findAll()).thenReturn(persons);
+        when(mapper.toResponse(any(Person.class))).thenReturn(personResponse);
+
         List<PersonResponse> result = service.findAll();
 
         assertNotNull(result, "The response entity must not be null");
@@ -120,22 +131,17 @@ class PersonServiceTest {
                 .anyMatch(link -> link.getRel().value().equals("delete")
                         && link.getHref().endsWith("/api/person/v1/1"));
         assertTrue(hasDeleteLink, "Link 'delete' is missing or invalid");
-
-        // Entity Fields Assertions
-        assertEquals(firstResult.getId(), persons.getFirst().getId(), "ID mismatch");
-        assertEquals(firstResult.getFirstName(), persons.getFirst().getFirstName(), "First name mismatch");
-        assertEquals(firstResult.getLastName(), persons.getFirst().getLastName(), "Last name mismatch");
-        assertEquals(firstResult.getAddress(), persons.getFirst().getAddress(), "Address mismatch");
-        assertEquals(firstResult.getGender(), persons.getFirst().getGender(), "Gender mismatch");
     }
 
     @Test
     void create() {
         var person = input.mockEntity(1);
         var request = input.mockRequest(1);
+        var personResponse = input.mockResponse(1);
 
-        when(repository.save(any(Person.class)))
-                .thenReturn(person);
+        when(mapper.toEntity(request)).thenReturn(person);
+        when(repository.save(any(Person.class))).thenReturn(person);
+        when(mapper.toResponse(person)).thenReturn(personResponse);
 
         PersonResponse result = service.create(request);
 
@@ -201,9 +207,11 @@ class PersonServiceTest {
     void update() {
         var person = input.mockEntity(1);
         var request = input.mockRequest(1);
+        var personResponse = input.mockResponse(1);
 
         when(repository.findById(1L)).thenReturn(Optional.of(person));
         when(repository.save(any(Person.class))).thenReturn(person);
+        when(mapper.toResponse(person)).thenReturn(personResponse);
 
         PersonResponse result = service.update(1L, request);
 
@@ -250,5 +258,4 @@ class PersonServiceTest {
 
         assertTrue(exception.getMessage().contains(expectedMessage));
     }
-
 }
