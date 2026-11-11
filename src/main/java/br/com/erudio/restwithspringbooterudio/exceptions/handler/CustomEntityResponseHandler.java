@@ -1,8 +1,6 @@
 package br.com.erudio.restwithspringbooterudio.exceptions.handler;
 
-import br.com.erudio.restwithspringbooterudio.exceptions.ExceptionResponse;
-import br.com.erudio.restwithspringbooterudio.exceptions.RequiredObjectIsNullException;
-import br.com.erudio.restwithspringbooterudio.exceptions.ResourceNotFoundException;
+import br.com.erudio.restwithspringbooterudio.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -51,6 +49,32 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler 
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleFileNotFoundException(Exception ex, WebRequest request) {
+        var response = ExceptionResponse.builder()
+                .timestamp(Instant.now())
+                .message(ex.getMessage())
+                .details(request.getDescription(false))
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(response);
+    }
+
+    @ExceptionHandler(FileStorageException.class)
+    public final ResponseEntity<ExceptionResponse> handleFileStorageException(Exception ex, WebRequest request) {
+        var response = ExceptionResponse.builder()
+                .timestamp(Instant.now())
+                .message(ex.getMessage())
+                .details(request.getDescription(false))
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(response);
     }
 }
