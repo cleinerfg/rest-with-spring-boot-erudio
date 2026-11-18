@@ -40,7 +40,7 @@ public class PersonService {
                 () -> new ResourceNotFoundException("No records found with id: " + id)
         );
         var dto = mapper.toResponse(entity);
-        addHateosLinks(dto);
+        addHateoasLinks(dto);
         return dto;
     }
 
@@ -51,7 +51,7 @@ public class PersonService {
 
         Page<PersonResponse> personResponsePage = personPage.map(entity -> {
             var dto = mapper.toResponse(entity);
-            addHateosLinks(dto);
+            addHateoasLinks(dto);
             return dto;
         });
 
@@ -73,7 +73,7 @@ public class PersonService {
 
         Page<PersonResponse> personResponsePage = personPage.map(entity -> {
             var dto = mapper.toResponse(entity);
-            addHateosLinks(dto);
+            addHateoasLinks(dto);
             return dto;
         });
 
@@ -96,7 +96,7 @@ public class PersonService {
         Person entity = mapper.toEntity(request);
         Person savedEntity = repository.save(entity);
         var dto = mapper.toResponse(savedEntity);
-        addHateosLinks(dto);
+        addHateoasLinks(dto);
         return dto;
     }
 
@@ -123,7 +123,7 @@ public class PersonService {
 
         Person updatedEntity = repository.save(entity);
         var dto = mapper.toResponse(updatedEntity);
-        addHateosLinks(dto);
+        addHateoasLinks(dto);
         return dto;
     }
 
@@ -138,11 +138,11 @@ public class PersonService {
         repository.save(entity);
 
         var dto = mapper.toResponse(entity);
-        addHateosLinks(dto);
+        addHateoasLinks(dto);
         return dto;
     }
 
-    private static void addHateosLinks(PersonResponse dto) {
+    private static void addHateoasLinks(PersonResponse dto) {
         Long id = dto.getId();
 
         dto.add(linkTo(methodOn(PersonController.class).getById(id))
