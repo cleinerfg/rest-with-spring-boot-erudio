@@ -1,7 +1,10 @@
 package br.com.erudio.restwithspringbooterudio.modules.person;
 
+import br.com.erudio.restwithspringbooterudio.exceptions.FileStorageException;
 import br.com.erudio.restwithspringbooterudio.exceptions.RequiredObjectIsNullException;
 import br.com.erudio.restwithspringbooterudio.exceptions.ResourceNotFoundException;
+import br.com.erudio.restwithspringbooterudio.modules.file.importer.factory.FileImporterFactory;
+import br.com.erudio.restwithspringbooterudio.modules.file.importer.port.FileImporter;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.PersonMapper;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonRequest;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonResponse;
@@ -16,6 +19,11 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.InputStream;
+import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -27,6 +35,9 @@ public class PersonService {
 
     @Autowired
     private PersonRepository repository;
+
+    @Autowired
+    private FileImporterFactory fileImporterFactory;
 
     @Autowired
     PagedResourcesAssembler<PersonResponse> assembler;
@@ -98,6 +109,33 @@ public class PersonService {
         var dto = mapper.toResponse(savedEntity);
         addHateoasLinks(dto);
         return dto;
+    }
+
+    public List<PersonResponse> massCreation(MultipartFile file) {
+        logger.info("Importing all persons!");
+
+        if (file.isEmpty()) throw new RequiredObjectIsNullException();
+
+        try (InputStream inputStream = file.getInputStream()) {
+            String filename = Optional.ofNullable(file.getOriginalFilename())
+                    .orElseThrow(RequiredObjectIsNullException::new);
+
+            logger.info("File type: " + file.getContentType());
+
+            FileImporter importer = fileImporterFactory.getImporter(filename);
+
+            List<Person> entities = importer.importFile(inputStream).stream()
+                    .map(request -> repository.save(mapper.toEntity(request)))
+                    .toList();
+
+            return entities.stream().map(entity -> {
+                var dto = mapper.toResponse(entity);
+                addHateoasLinks(dto);
+                return dto;
+            }).toList();
+        } catch (Exception e) {
+            throw new FileStorageException("Error processing file", e);
+        }
     }
 
     public void delete(Long id) {
