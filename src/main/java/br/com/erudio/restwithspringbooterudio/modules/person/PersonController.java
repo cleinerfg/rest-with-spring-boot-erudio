@@ -3,13 +3,16 @@ package br.com.erudio.restwithspringbooterudio.modules.person;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonRequest;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonResponse;
 import br.com.erudio.restwithspringbooterudio.modules.person.docs.PersonControllerDocs;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -112,6 +115,48 @@ public class PersonController implements PersonControllerDocs {
     @Override public ResponseEntity<List<PersonResponse>> massCreation(@RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok(service.massCreation(file));
 
+    }
+
+    @GetMapping("/export-page")
+    @Override
+    public ResponseEntity<Resource> exportPage(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction,
+            HttpServletRequest request
+    ) {
+
+        Direction sortDirection = "desc".equalsIgnoreCase(direction)
+                ? Direction.DESC
+                : Direction.ASC;
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(sortDirection, "firstName")
+        );
+
+        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
+
+        Resource resource = service.exportPage(pageable, acceptHeader);
+
+        boolean isCsv = "text/csv".equalsIgnoreCase(acceptHeader);
+
+        String contentType = isCsv
+                ? "text/csv"
+                : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+        String fileExtension = isCsv ? ".csv" : ".xlsx";
+
+        String filename = "people_exported" + fileExtension;
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + filename + "\""
+                )
+                .body(resource);
     }
 
     @PutMapping(
