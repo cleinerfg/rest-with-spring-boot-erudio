@@ -3,6 +3,8 @@ package br.com.erudio.restwithspringbooterudio.modules.person;
 import br.com.erudio.restwithspringbooterudio.exceptions.FileStorageException;
 import br.com.erudio.restwithspringbooterudio.exceptions.RequiredObjectIsNullException;
 import br.com.erudio.restwithspringbooterudio.exceptions.ResourceNotFoundException;
+import br.com.erudio.restwithspringbooterudio.modules.file.exporter.factory.FileExporterFactory;
+import br.com.erudio.restwithspringbooterudio.modules.file.exporter.port.FileExporter;
 import br.com.erudio.restwithspringbooterudio.modules.file.importer.factory.FileImporterFactory;
 import br.com.erudio.restwithspringbooterudio.modules.file.importer.port.FileImporter;
 import br.com.erudio.restwithspringbooterudio.modules.person.data.PersonMapper;
@@ -11,6 +13,7 @@ import br.com.erudio.restwithspringbooterudio.modules.person.data.dto.PersonResp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -38,6 +41,9 @@ public class PersonService {
 
     @Autowired
     private FileImporterFactory fileImporterFactory;
+
+    @Autowired
+    private FileExporterFactory fileExporterFactory;
 
     @Autowired
     PagedResourcesAssembler<PersonResponse> assembler;
@@ -136,6 +142,16 @@ public class PersonService {
         } catch (Exception e) {
             throw new FileStorageException("Error processing file", e);
         }
+    }
+
+    public Resource exportPage(Pageable pageable, String acceptHeader) {
+        logger.info("Exporting a people page!");
+
+        List<Person> persons = repository.findAll(pageable).getContent();
+
+        FileExporter fileExporter = fileExporterFactory.getExporter(acceptHeader);
+
+        return fileExporter.export(persons);
     }
 
     public void delete(Long id) {
